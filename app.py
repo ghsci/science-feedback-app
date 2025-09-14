@@ -72,10 +72,6 @@ if st.button("Get Feedback", type="primary"):
             with st.spinner("Analyzing your procedure... Please wait."):
                 # Configure the Gemini model
                 genai.configure(api_key=st.secrets["google_api_key"])
-                model = genai.GenerativeModel('gemini-2.5-flash-preview-05-20')
-
-                # Prepare the prompts
-                model_procedure_text = MODEL_PROCEDURES[selected_experiment_key]["procedure"]
                 
                 system_prompt = """You are a helpful S.2 Integrated Science teacher's assistant. Your task is to give feedback on a student's written procedure.
     
@@ -85,13 +81,20 @@ The feedback must be structured in two sections:
 1.  **Well Done:** Briefly mention 1-2 things the student did correctly. Start this section with '### Well Done'.
 2.  **Areas for Improvement:** Give specific, numbered suggestions for improvement based on the model procedure. Start this section with '### Areas for Improvement'."""
                 
+                # Prepare the user query
+                model_procedure_text = MODEL_PROCEDURES[selected_experiment_key]["procedure"]
                 user_query = f"**Model Procedure:**\n{model_procedure_text}\n\n---\n\n**Student's Procedure:**\n{student_procedure}"
+
+                # Initialize the model with the system prompt
+                model = genai.GenerativeModel(
+                    'gemini-2.5-flash-preview-05-20',
+                    system_instruction=system_prompt
+                )
 
                 # Generate content
                 response = model.generate_content(
-                    [user_query],
-                    generation_config=genai.types.GenerationConfig(temperature=0.7),
-                    system_instruction=system_prompt
+                    user_query,
+                    generation_config=genai.types.GenerationConfig(temperature=0.7)
                 )
                 
                 feedback_text = response.text
@@ -118,3 +121,4 @@ The feedback must be structured in two sections:
 
         except Exception as e:
             st.error(f"An error occurred while getting feedback: {e}", icon="🚨")
+
