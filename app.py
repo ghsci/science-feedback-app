@@ -87,7 +87,7 @@ The feedback must be structured in two sections:
 
                 # Initialize the model with the system prompt
                 model = genai.GenerativeModel(
-                    'gemini-2.5-flash-preview-05-20',
+                    'gemini-2.0-flash',
                     system_instruction=system_prompt
                 )
 
