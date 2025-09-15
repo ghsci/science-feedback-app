@@ -40,6 +40,28 @@ MODEL_PROCEDURES = {
     }
 }
 
+# --- Hints for Guided Learning ---
+HINTS = {
+    "Light": [
+        "**Step 1: Preparation** - Before you start, how can you be sure any starch you find was made *during* the experiment? What's the essential first step?",
+        "**Step 2: Setting up the Test** - To make it a fair test, you need to compare a part of the plant that gets light with a part that doesn't. How could you achieve this on a single leaf?",
+        "**Step 3: Running the Experiment** - Now that your test is set up, what condition does the plant need to photosynthesize? For how long should you provide this condition?",
+        "**Step 4: Checking the Result** - What is the final chemical test you need to perform to see if starch was made?"
+    ],
+    "Carbon Dioxide": [
+        "**Step 1: Preparation** - Just like the other experiments, what's the crucial first step to ensure your results are valid and not from pre-existing starch?",
+        "**Step 2: Setting up the Test** - You need one leaf with carbon dioxide and one without. What chemical can absorb CO₂ from the air? How can you isolate the air around the leaves?",
+        "**Step 3: Running the Experiment** - After setting up your two conditions, what does the plant need to start photosynthesizing? How long should you wait?",
+        "**Step 4: Checking the Result** - How will you check both leaves for the presence of starch at the end?"
+    ],
+    "Chlorophyll": [
+        "**Step 1: Preparation** - What must you do to the plant before starting the experiment to ensure a fair test?",
+        "**Step 2: Setting up the Test** - For this experiment, you need a leaf that already has a 'test' and a 'control' built-in. What special type of leaf has both green and non-green parts?",
+        "**Step 3: Running the Experiment** - Once prepared, what single condition does this special plant need to begin photosynthesizing?",
+        "**Step 4: Checking the Result** - What is the final procedure to check for starch in both the green and the non-green areas of the leaf?"
+    ]
+}
+
 # --- Main App Interface ---
 st.title("🧪 Scientific Procedure Feedback Assistant")
 st.markdown("Get instant, AI-powered feedback on your experimental procedures for S.2 Integrated Science.")
@@ -52,11 +74,20 @@ selected_experiment_key = st.selectbox(
     format_func=lambda key: MODEL_PROCEDURES[key]["full_name"]
 )
 
-# Step 2: Procedure Input
+# Step 2: Procedure Input with Hints
+st.markdown("**2. Write your procedure below:**")
+
+with st.expander("Stuck? Click here for some hints!"):
+    st.markdown("Read these questions to help you think about the necessary steps.")
+    # Display hints for the selected experiment
+    for hint in HINTS[selected_experiment_key]:
+        st.markdown(f"- {hint}")
+
 student_procedure = st.text_area(
-    "**2. Enter your procedure below:**",
+    "Enter your procedure here:",
     height=250,
-    placeholder="Describe the procedure step by step..."
+    placeholder="Describe the procedure step by step...",
+    label_visibility="collapsed"
 )
 
 # Step 3: Feedback Button
